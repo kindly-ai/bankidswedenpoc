@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "baseUrl": ".",
+    "lib": [
+      "es2020"
+    ],
     "module": "commonjs",
+    "target": "es2020",
+    "allowJs": false,
+    "noEmit": true,
+    "strict": true,
+    "isolatedModules": true,
+    "noImplicitAny": true,
     "esModuleInterop": true,
-    "target": "es6",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist"
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "pretty": true,
   },
-  "lib": ["es2015"]
+  "exclude": [
+    "node_modules"
+  ]
 }
-
-
-

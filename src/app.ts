@@ -1,12 +1,10 @@
 import express from "express";
-const app = express();
-const port = 3000;
-
-const BankId = require("bankid");
+import * as BankId from "bankid";
 
 const client = new BankId.BankIdClient();
 const pno = "196210156342";
 
+const app = express();
 app.get("/auth", (req, res) => {
   client
     .authenticateAndCollect({
@@ -20,9 +18,7 @@ app.get("/auth", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello typescript World!");
+  res.send("Hello Typescript!");
 });
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+export default app;

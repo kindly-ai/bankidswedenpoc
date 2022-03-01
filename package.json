@@ -2,15 +2,24 @@
   "name": "bankidswedentypescript",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "start": "cross-env nodemon -e js,ts --exec babel-node --extensions '.ts,.js' bin/www.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.8",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
     "@types/express": "^4.17.1",
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.15",
     "typescript": "^4.6.2"
   },
   "dependencies": {
