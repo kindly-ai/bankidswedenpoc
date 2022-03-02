@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      window.kindlyOptions = {
+        getAuthToken: async function (chatId) {
+          return fetch('/your-auth-endpoint', {
+            method: 'POST',
+            body: JSON.stringify({ chatId }),
+          })
+            .then((response) => response.json())
+            .then(({ token }) => token);
+        },
+      };
+    </script>
+    <script
+      id="kindly-chat"
+      src="https://chat.kindlycdn.com/kindly-chat.js"
+      data-bot-key="46208e70-529e-4ec6-b855-495419652a33"
+      async
+    ></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        var ssn;
+        $('#submit').click(function () {
+          ssn = $('#ssn').val();
+
+          $.post('http://localhost:3000/login', { ssn }, function (data) {
+            if (data === 'yes') {
+              alert('login success');
+            }
+          });
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Authenticate</h1>
+    <input id="ssn" size="40" type="TEXT" />
+    <input id="submit" type="button" value="Submit" />
+  </body>
+</html>
