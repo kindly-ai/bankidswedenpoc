@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "lint": "eslint --quiet src",
-    "format": "eslint --fix src",
+    "lint": "eslint --quiet src && tsc",
+    "format": "eslint --fix src && tsc",
     "start": "cross-env nodemon -e js,ts --exec babel-node --extensions '.ts,.js' bin/www.ts",
     "test": "jest"
   },
@@ -20,7 +20,10 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@types/express": "^4.17.1",
+    "@types/jest": "^27.4.1",
     "@types/node": "^14.18.12",
+    "@types/passport": "^1.0.7",
+    "@types/passport-jwt": "^3.0.6",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
     "babel-jest": "^27.5.1",
@@ -40,8 +43,12 @@
   },
   "dependencies": {
     "bankid": "^3.0.0",
-    "body-parser": "^1.19.2",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
     "path": "^0.12.7"
   }
 }

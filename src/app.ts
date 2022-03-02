@@ -1,36 +1,57 @@
-import express from 'express';
-import * as BankId from 'bankid';
-
-import bodyParser from 'body-parser';
-
+import express, { Request } from 'express';
+import passport from 'passport';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import path from 'node:path';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { StatusCodes } from 'http-status-codes';
+import bankid from './bankid';
+import { HS256_SECRET, issueKindlyChatJWT, LocalAppJWT } from './jwt';
+
+const jwtFinder = ExtractJwt.fromAuthHeaderAsBearerToken();
+
+function getJwtFromReq(req: Request): JwtPayload {
+  const encoded = jwtFinder(req);
+  if (!encoded) {
+    throw new Error('JWT not found');
+  }
+
+  return jwt.decode(encoded) as JwtPayload;
+}
+
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: jwtFinder,
+      secretOrKey: HS256_SECRET,
+    },
+    (jwtPayload, done) => {
+      console.log(jwtPayload);
+      return done(undefined, jwtPayload);
+    }
+  )
+);
 
 // Here we are configuring express to use body-parser as middle-ware.
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
 
-const client = new BankId.BankIdClient();
+app.post('/bankid-auth', bankid);
 
-app.get('/auth', (req, res) => {
-  client
-    .authenticateAndCollect({
-      personalNumber: req.body?.pno ?? '196210156342',
-      endUserIp: '127.0.0.1',
-    })
-    .then((r) => console.log(r.completionData))
-    .catch(console.error);
+app.post('/chatbubble-auth', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const localAppJWT = getJwtFromReq(req) as LocalAppJWT;
+  const chatId = req.body.chat_id;
 
-  res.send('authenticated');
+  if (!chatId) {
+    res.status(StatusCodes.BAD_REQUEST).send({ error: 'Missing chat_id' });
+    return;
+  }
+
+  const kindlyChatJWT = issueKindlyChatJWT(localAppJWT, chatId);
+  res.send({ token: kindlyChatJWT });
 });
 
-app.get('/', (request, response) => {
-  response.sendFile(path.join(`${__dirname}/index.html`));
-});
-
-app.post('/login', (request, response) => {
-  const { ssn } = request.body;
-  response.send('yes');
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 export default app;
