@@ -17,7 +17,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['.eslintrc.js'],
+      files: ['.eslintrc.js', 'jest.config.ts'],
       rules: {
         'unicorn/prefer-module': 'off', // unicorn wants js files to use the export keywords, but eslint doesn't understand it for the config file itself
       },
