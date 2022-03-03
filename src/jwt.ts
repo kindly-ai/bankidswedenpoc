@@ -1,6 +1,8 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import path from 'node:path';
 import * as fs from 'node:fs';
+import { Request } from 'express';
+import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 
 const privKeyPath = path.join(__dirname, '..', 'certs', 'kindly-chat-auth', 'private.pem');
 const privKey = fs.readFileSync(privKeyPath);
@@ -58,3 +60,25 @@ export function issueKindlyChatJWT(localJWT: LocalAppJWT, chatId: string): strin
     expiresIn: '5m',
   });
 }
+
+export const jwtFinder = ExtractJwt.fromAuthHeaderAsBearerToken();
+
+export function getJwtFromRequest(req: Request): JwtPayload {
+  const encoded = jwtFinder(req);
+  if (!encoded) {
+    throw new Error('JWT not found');
+  }
+
+  return jwt.decode(encoded) as JwtPayload;
+}
+
+export const jwtStrategy = new JwtStrategy(
+  {
+    jwtFromRequest: jwtFinder,
+    secretOrKey: HS256_SECRET,
+  },
+  (jwtPayload, done) => {
+    console.log(jwtPayload);
+    return done(undefined, jwtPayload);
+  }
+);
