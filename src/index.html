@@ -3,9 +3,12 @@
     <script type="text/javascript">
       window.kindlyOptions = {
         getAuthToken: async function (chatId) {
-          return fetch('/your-auth-endpoint', {
+          return fetch('/chatbubble-auth', {
             method: 'POST',
             body: JSON.stringify({ chatId }),
+            headers: {
+              Authorization: 'Bearer ' + 'fake token, get the real one from localstorage',
+            },
           })
             .then((response) => response.json())
             .then(({ token }) => token);
@@ -29,18 +32,24 @@
     <script>
       $(document).ready(function () {
         $('#spinner').hide();
-        var ssn;
+        var pno;
         $('#submit').click(function () {
           $('#spinner').show();
           $('#submit').attr('disabled', 'true');
-          ssn = $('#ssn').val();
+          pno = $('#pno').val();
 
-          $.post('http://localhost:3000/login', { ssn }, function (data) {
-            $('#spinner').hide();
-            if (data === 'yes') {
-              alert('login success');
-            }
-          });
+          fetch('/bankid-auth', {
+            method: 'POST',
+            body: JSON.stringify({ pno }),
+          })
+            .then((response) => response.json())
+            .then(({ token }) => {
+              localStorage.setItem('testObject', JSON.stringify({ test: 13 }));
+              $('#spinner').hide();
+              if (data === 'yes') {
+                alert('login success');
+              }
+            });
         });
       });
     </script>
@@ -56,9 +65,9 @@
   <body>
     <div>
       <h1>BankID login demo 🇸🇪</h1>
-      <div id="ssnForm">
-        <label for="ssn">Social Security Number:</label><br />
-        <input id="ssn" size="40" type="TEXT" />
+      <div id="pnForm">
+        <label for="pnp">Personal number:</label><br />
+        <input id="pno" size="40" type="TEXT" />
         <input id="submit" type="button" value="Submit" />
         <div id="spinner" class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>

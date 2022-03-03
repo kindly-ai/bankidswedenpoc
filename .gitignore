@@ -1,5 +1,6 @@
 *.lcov
 *.log
+*.pem
 *.pid
 *.pid.lock
 *.seed

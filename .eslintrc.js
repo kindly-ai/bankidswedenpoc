@@ -14,6 +14,8 @@ module.exports = {
   ],
   rules: {
     'unicorn/prevent-abbreviations': 'off',
+    'unicorn/prefer-module': 'off',
+    'import/extensions': 'off',
   },
   overrides: [
     {
