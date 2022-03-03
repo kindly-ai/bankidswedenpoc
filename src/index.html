@@ -1,78 +1,80 @@
 <html>
-  <head>
-    <script type="text/javascript">
-      window.kindlyOptions = {
-        getAuthToken: async function (chatId) {
-          return fetch('/chatbubble-auth', {
-            method: 'POST',
-            body: JSON.stringify({ chatId }),
-            headers: {
-              Authorization: 'Bearer ' + 'fake token, get the real one from localstorage',
-            },
-          })
+<head>
+  <script type="text/javascript">
+    window.kindlyOptions = {
+      getAuthToken: async function (chat_id) {
+        return fetch('/chatbubble-auth', {
+          method: 'POST',
+          body: JSON.stringify({chat_id}),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + localStorage.getItem('auth-token'),
+          },
+        })
             .then((response) => response.json())
-            .then(({ token }) => token);
-        },
-      };
-    </script>
-    <script
+            .then(({token}) => token);
+      },
+    };
+  </script>
+  <script
       id="kindly-chat"
       src="https://chat.kindlycdn.com/kindly-chat.js"
       data-bot-key="46208e70-529e-4ec6-b855-495419652a33"
       async
-    ></script>
-    <link
+  ></script>
+  <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css"
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
-    />
+  />
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $('#spinner').hide();
-        var pno;
-        $('#submit').click(function () {
-          $('#spinner').show();
-          $('#submit').attr('disabled', 'true');
-          pno = $('#pno').val();
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#spinner').hide();
+      var pno;
+      $('#submit').click(function () {
+        $('#spinner').show();
+        $('#submit').attr('disabled', 'true');
+        pno = $('#pno').val();
 
-          fetch('/bankid-auth', {
-            method: 'POST',
-            body: JSON.stringify({ pno }),
-          })
+        fetch('/bankid-auth', {
+          method: 'POST',
+          body: JSON.stringify({pno}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
             .then((response) => response.json())
-            .then(({ token }) => {
-              localStorage.setItem('testObject', JSON.stringify({ test: 1337 }));
+            .then(({token}) => {
+              console.log({token})
+              localStorage.setItem('auth-token', token);
               $('#spinner').hide();
-              if (data === 'yes') {
-                alert('login success');
-              }
             });
-        });
       });
-    </script>
-    <style>
-      body {
-        background-color: aqua;
-        justify-content: center;
-        display: flex;
-        padding: 100px;
-      }
-    </style>
-  </head>
-  <body>
-    <div>
-      <h1>BankID login demo 🇸🇪</h1>
-      <div id="pnForm">
-        <label for="pnp">Personal number:</label><br />
-        <input id="pno" size="40" type="TEXT" />
-        <input id="submit" type="button" value="Submit" />
-        <div id="spinner" class="spinner-border" role="status">
-          <span class="sr-only">Loading...</span>
-        </div>
-      </div>
+    });
+  </script>
+  <style>
+    body {
+      background-color: aqua;
+      justify-content: center;
+      display: flex;
+      padding: 100px;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <h1>BankID login demo 🇸🇪</h1>
+  <div id="pnForm">
+    <label for="pno">Personal number:</label><br/>
+    <input id="pno" size="40" type="TEXT"/>
+    <input id="submit" type="button" value="Submit"/>
+    <div id="spinner" class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
-  </body>
+  </div>
+</div>
+</body>
 </html>

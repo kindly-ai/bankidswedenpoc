@@ -17,8 +17,6 @@ function ipv4FromRequest(req: Request): string {
 }
 
 export default async function route(req: Request, res: Response): Promise<void> {
-  console.log('------', req.body);
-
   const {
     body: { pno },
   } = req;
@@ -43,10 +41,16 @@ export default async function route(req: Request, res: Response): Promise<void> 
 
     const token = issueLocalJWT(completionData.user);
 
-    res.status(StatusCodes.BAD_REQUEST).send({ token });
+    res.status(StatusCodes.OK).send({ token });
   } catch (error) {
     console.error(error);
+
+    if ((error as Record<string, string>)?.status) {
+      res.status(StatusCodes.BAD_REQUEST).send(error);
+      return;
+    }
+
     assert(error instanceof Error);
-    res.status(StatusCodes.OK).send({ error: error.message });
+    res.status(StatusCodes.BAD_REQUEST).send({ error: error.message });
   }
 }
