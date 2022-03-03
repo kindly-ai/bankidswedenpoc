@@ -32,6 +32,7 @@
         var ssn;
         $('#submit').click(function () {
           $('#spinner').show();
+          $('#submit').attr('disabled', 'true');
           ssn = $('#ssn').val();
 
           $.post('http://localhost:3000/login', { ssn }, function (data) {
@@ -43,13 +44,26 @@
         });
       });
     </script>
+    <style>
+      body {
+        background-color: aqua;
+        justify-content: center;
+        display: flex;
+        padding: 100px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Authenticate</h1>
-    <input id="ssn" size="40" type="TEXT" />
-    <input id="submit" type="button" value="Submit" />
-    <div id="spinner" class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
+    <div>
+      <h1>BankID login demo 🇸🇪</h1>
+      <div id="ssnForm">
+        <label for="ssn">Social Security Number:</label><br />
+        <input id="ssn" size="40" type="TEXT" />
+        <input id="submit" type="button" value="Submit" />
+        <div id="spinner" class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
     </div>
   </body>
 </html>
