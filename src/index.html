@@ -44,7 +44,7 @@
           })
             .then((response) => response.json())
             .then(({ token }) => {
-              localStorage.setItem('testObject', JSON.stringify({ test: 13 }));
+              localStorage.setItem('testObject', JSON.stringify({ test: 1337 }));
               $('#spinner').hide();
               if (data === 'yes') {
                 alert('login success');
